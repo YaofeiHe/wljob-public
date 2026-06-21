@@ -1,0 +1,156 @@
+{
+  "boundaries": [
+    "不读取 cookie、token、浏览器 profile、SSH key、.env、密码文件或其他凭据。",
+    "不绕过登录、CAPTCHA、403、WAF、平台风控或反爬系统。",
+    "外部写入、发布、安装依赖、真实浏览器访问和外部 LLM 调用必须显式审批。",
+    "GitHub public 发布必须先完成 secret/private metadata scan，并需要显式确认。",
+    "不自动输入账号密码，不自动提交网申，不自动发送消息或联系招聘方。",
+    "简历上传、附件上传、最终投递点击和发送沟通内容必须单独审批。",
+    "飞书同步必须使用真实 Open Platform 配置；缺配置或权限时输出 blocked。"
+  ],
+  "domain": "chinese_job_application_workflow",
+  "edges": [
+    {
+      "from": "intent_source",
+      "label": "scope",
+      "to": "intake"
+    },
+    {
+      "from": "intake",
+      "label": "route selection",
+      "to": "source_planning"
+    },
+    {
+      "from": "source_planning",
+      "label": "approved readonly sources",
+      "to": "job_cards"
+    },
+    {
+      "from": "job_cards",
+      "label": "normalize + compare",
+      "to": "scoring"
+    },
+    {
+      "from": "scoring",
+      "label": "next action proposal",
+      "to": "proposal_gate"
+    },
+    {
+      "from": "proposal_gate",
+      "label": "sensitive action check",
+      "to": "execution_guard"
+    },
+    {
+      "from": "execution_guard",
+      "label": "write audit trail",
+      "to": "artifacts"
+    },
+    {
+      "from": "execution_guard",
+      "label": "document result",
+      "to": "records_sync"
+    },
+    {
+      "from": "artifacts",
+      "label": "renderable state",
+      "to": "operation_surface"
+    },
+    {
+      "from": "records_sync",
+      "label": "docs + board",
+      "to": "operation_surface"
+    }
+  ],
+  "nodes": [
+    {
+      "details": "读取 docs/intent 与项目概览，明确 wljob 是通用中文互联网求职/网申 workflow kernel，而不是单次求职脚本。",
+      "id": "intent_source",
+      "label": "意图与需求源",
+      "one_liner_zh": "沉淀 wljob 的原始需求、规范化需求和历史参考边界。"
+    },
+    {
+      "details": "输出可审计的 intent artifact，作为后续路线选择和岗位整理的输入。",
+      "id": "intake",
+      "label": "求职意图 Intake",
+      "one_liner_zh": "解析用户的求职方向、公司/岗位/链接输入、地点和偏好约束。"
+    },
+    {
+      "details": "只生成来源计划和只读检索边界；没有真实来源或审批时不得编造岗位 URL。",
+      "id": "source_planning",
+      "label": "岗位来源规划",
+      "one_liner_zh": "在官网招聘、官方 ATS、招聘平台、用户链接和本地数据之间选择受控路线。"
+    },
+    {
+      "details": "字段包括公司、岗位、地点、薪资、技能、链接、申请状态、风险提示、证据来源和更新时间。",
+      "id": "job_cards",
+      "label": "岗位卡片与索引",
+      "one_liner_zh": "把已批准来源整理为岗位卡片、状态索引和可比较表格。"
+    },
+    {
+      "details": "面向后端、工程型算法、数据分析、AI 工程化、AI Infra、数据评测和智能驾驶等方向。",
+      "id": "scoring",
+      "label": "解释性评分排序",
+      "one_liner_zh": "结合默认画像与用户偏好，对岗位匹配度做可解释排序。"
+    },
+    {
+      "details": "敏感动作必须等待显式确认；审批卡和 decision artifact 进入审计链路。",
+      "id": "proposal_gate",
+      "label": "Proposal 与审批门禁",
+      "one_liner_zh": "在真实浏览器、外部写入、附件上传、投递或沟通前生成审批卡。"
+    },
+    {
+      "details": "不读取 cookie/token/browser profile/SSH key/.env/密码，不绕过 CAPTCHA/403/WAF，不自动提交网申或发送消息。",
+      "id": "execution_guard",
+      "label": "安全执行边界",
+      "one_liner_zh": "遇到登录、验证码、风控、凭据请求或敏感页面时停止并写 blocked artifact。"
+    },
+    {
+      "details": "用于恢复回绑、Verix 审计、人工复核和后续前端展示。",
+      "id": "artifacts",
+      "label": "状态与审计 Artifacts",
+      "one_liner_zh": "统一记录 state、interaction、proposal、approval、audit 和 blocked 结果。"
+    },
+    {
+      "details": "默认 GitHub private 与飞书长期文档同步；public 发布必须先做 secret/private metadata scan 并显式确认。",
+      "id": "records_sync",
+      "label": "项目记录与同步",
+      "one_liner_zh": "维护项目说明、操作指南、飞书记录、GitHub private/public 同步边界和记录板。"
+    },
+    {
+      "details": "architecture.json、architecture.mmd 和 modules.yaml 可作为系统架构展示、文档同步和前端渲染输入。",
+      "id": "operation_surface",
+      "label": "操作入口与前端展示",
+      "one_liner_zh": "为 wljob 提供 CLI/Codex workflow 入口，并为后续前端实现暴露稳定结构。"
+    }
+  ],
+  "project_name": "wljob",
+  "repo_scan": {
+    "package_files": [
+      "README.md"
+    ],
+    "skipped_secret_like": [],
+    "top_dirs": [
+      ".github",
+      ".nexus",
+      "docs"
+    ]
+  },
+  "schema": "nexus.system_architecture.v1",
+  "source_files": [
+    "docs/intent/normalized-requirement.md",
+    "docs/intent/original-requirement.md",
+    "docs/project-overview.md",
+    "docs/operation-guide.md",
+    "docs/feishu-records.md",
+    ".nexus/project-intent.json",
+    ".nexus/board.md",
+    "README.md",
+    "docs/github-sync-guide.md",
+    ".github/nexus-sync.json",
+    "docs/system/architecture.md",
+    "docs/system/architecture.mmd",
+    "docs/system/architecture.json",
+    "docs/system/modules.yaml"
+  ],
+  "summary": "wljob 系统架构展示：基于项目意图、长期文档和 repo scan 生成，覆盖领域 workflow、schema/index、审批门禁、审计 artifact 与同步边界。"
+}

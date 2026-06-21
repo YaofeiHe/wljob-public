@@ -1,0 +1,52 @@
+schema: nexus.system.modules.v1
+modules:
+  -
+    id: "intent_source"
+    name: "意图与需求源"
+    one_liner_zh: "沉淀 wljob 的原始需求、规范化需求和历史参考边界。"
+    details: "读取 docs/intent 与项目概览，明确 wljob 是通用中文互联网求职/网申 workflow kernel，而不是单次求职脚本。"
+  -
+    id: "intake"
+    name: "求职意图 Intake"
+    one_liner_zh: "解析用户的求职方向、公司/岗位/链接输入、地点和偏好约束。"
+    details: "输出可审计的 intent artifact，作为后续路线选择和岗位整理的输入。"
+  -
+    id: "source_planning"
+    name: "岗位来源规划"
+    one_liner_zh: "在官网招聘、官方 ATS、招聘平台、用户链接和本地数据之间选择受控路线。"
+    details: "只生成来源计划和只读检索边界；没有真实来源或审批时不得编造岗位 URL。"
+  -
+    id: "job_cards"
+    name: "岗位卡片与索引"
+    one_liner_zh: "把已批准来源整理为岗位卡片、状态索引和可比较表格。"
+    details: "字段包括公司、岗位、地点、薪资、技能、链接、申请状态、风险提示、证据来源和更新时间。"
+  -
+    id: "scoring"
+    name: "解释性评分排序"
+    one_liner_zh: "结合默认画像与用户偏好，对岗位匹配度做可解释排序。"
+    details: "面向后端、工程型算法、数据分析、AI 工程化、AI Infra、数据评测和智能驾驶等方向。"
+  -
+    id: "proposal_gate"
+    name: "Proposal 与审批门禁"
+    one_liner_zh: "在真实浏览器、外部写入、附件上传、投递或沟通前生成审批卡。"
+    details: "敏感动作必须等待显式确认；审批卡和 decision artifact 进入审计链路。"
+  -
+    id: "execution_guard"
+    name: "安全执行边界"
+    one_liner_zh: "遇到登录、验证码、风控、凭据请求或敏感页面时停止并写 blocked artifact。"
+    details: "不读取 cookie/token/browser profile/SSH key/.env/密码，不绕过 CAPTCHA/403/WAF，不自动提交网申或发送消息。"
+  -
+    id: "artifacts"
+    name: "状态与审计 Artifacts"
+    one_liner_zh: "统一记录 state、interaction、proposal、approval、audit 和 blocked 结果。"
+    details: "用于恢复回绑、Verix 审计、人工复核和后续前端展示。"
+  -
+    id: "records_sync"
+    name: "项目记录与同步"
+    one_liner_zh: "维护项目说明、操作指南、飞书记录、GitHub private/public 同步边界和记录板。"
+    details: "默认 GitHub private 与飞书长期文档同步；public 发布必须先做 secret/private metadata scan 并显式确认。"
+  -
+    id: "operation_surface"
+    name: "操作入口与前端展示"
+    one_liner_zh: "为 wljob 提供 CLI/Codex workflow 入口，并为后续前端实现暴露稳定结构。"
+    details: "architecture.json、architecture.mmd 和 modules.yaml 可作为系统架构展示、文档同步和前端渲染输入。"

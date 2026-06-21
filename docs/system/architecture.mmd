@@ -1,0 +1,21 @@
+flowchart TD
+  intent_source[意图与需求源]
+  intake[求职意图 Intake]
+  source_planning[岗位来源规划]
+  job_cards[岗位卡片与索引]
+  scoring[解释性评分排序]
+  proposal_gate[Proposal 与审批门禁]
+  execution_guard[安全执行边界]
+  artifacts[状态与审计 Artifacts]
+  records_sync[项目记录与同步]
+  operation_surface[操作入口与前端展示]
+  intent_source -->|scope| intake
+  intake -->|route selection| source_planning
+  source_planning -->|approved readonly sources| job_cards
+  job_cards -->|normalize + compare| scoring
+  scoring -->|next action proposal| proposal_gate
+  proposal_gate -->|sensitive action check| execution_guard
+  execution_guard -->|write audit trail| artifacts
+  execution_guard -->|document result| records_sync
+  artifacts -->|renderable state| operation_surface
+  records_sync -->|docs + board| operation_surface
